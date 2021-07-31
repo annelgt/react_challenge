@@ -1,28 +1,35 @@
 import * as actionTypes from "./actionTypes"
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 
 const initialState: BriefState = {
-  briefs: [],
+    briefs: [],
+    products: [],
 }
 
 const reducer = (
-  state: BriefState = initialState,
-  action: BriefAction
+    state: BriefState = initialState,
+    action: BriefAction
 ): BriefState => {
-  switch (action.type) {
-    case actionTypes.ADD_BRIEF:
-      const newBrief: IBrief = {
-        id: uuidv4(),
-        title: action.brief.title,
-        comment: action.brief.comment,
-        productId: action.brief.productId,
-      }
-      return {
-        ...state,
-        briefs: state.briefs.concat(newBrief),
-      }
-  }
-  return state
+
+    switch (action.type) {
+        case actionTypes.ADD_BRIEF:
+            const newBrief: any = {
+                id: uuidv4(),
+                title: action.brief.title,
+                comment: action.brief.comment,
+                product: action.brief.product,
+            }
+            return {
+                ...state,
+                briefs: state.briefs.concat(newBrief),
+            }
+        case actionTypes.GET_PRODUCTS:
+            return {
+                ...state,
+                products: action.products
+            }
+    }
+    return state
 }
 
 export default reducer
