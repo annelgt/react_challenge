@@ -1,5 +1,5 @@
 import * as actionTypes from "./actionTypes"
-import {v4 as uuidv4} from 'uuid';
+
 
 const initialState: BriefState = {
     briefs: [],
@@ -13,23 +13,17 @@ const reducer = (
 
     switch (action.type) {
         case actionTypes.ADD_BRIEF:
-            const newBrief: any = {
-                id: uuidv4(),
-                title: action.brief.title,
-                comment: action.brief.comment,
-                product: action.brief.product,
-            }
             return {
                 ...state,
-                briefs: state.briefs.concat(newBrief),
-            }
+                briefs: state.briefs.concat(action.brief)
+            };
         case actionTypes.GET_PRODUCTS:
             return {
                 ...state,
                 products: action.products
-            }
+            };
     }
-    return state
+    return state;
 }
 
-export default reducer
+export default reducer;
