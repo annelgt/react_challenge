@@ -4,7 +4,7 @@ import * as actionTypes from "../store/actionTypes";
 import {createBrief, getProducts} from "../store/actions";
 
 type GetProductsFunction = () => void;
-type CreateBriefFunction = (brief: IBrief) => void;
+type CreateBriefFunction = (data: BriefState) => void;
 
 type BriefFormProps = {
     getProducts: GetProductsFunction,
@@ -12,10 +12,10 @@ type BriefFormProps = {
     products: IProduct[]
 };
 
-export class BriefForm extends Component<BriefFormProps, IBrief> {
+export class BriefForm extends Component<BriefFormProps, BriefState> {
     constructor(props) {
         super(props);
-        this.state = {title: "", comment: "", product: ""};
+        this.state = {title: "", comment: "", productId: 1};
 
         this.onChangeProduct = this.onChangeProduct.bind(this);
         this.onChangeTitle = this.onChangeTitle.bind(this);
@@ -28,7 +28,7 @@ export class BriefForm extends Component<BriefFormProps, IBrief> {
     }
 
     onChangeProduct(event): void {
-        this.setState({product: event.target.value});
+        this.setState({productId: event.target.value});
     }
 
     onChangeTitle(event): void {
@@ -56,7 +56,8 @@ export class BriefForm extends Component<BriefFormProps, IBrief> {
                     Commentaire :
                 </label>
                 <input type="text" name="comment" value={this.state.comment} onChange={this.onChangeComment}/>
-                <select name="product" value={this.state.product} onChange={this.onChangeProduct}>
+                <select name="product" value={this.state.productId || this.props.products[0]?.id}
+                        onChange={this.onChangeProduct}>
                     {this.props.products.map((product: IProduct, index) => {
                         return <option key={product.id} value={product.id}>{product.label}</option>;
                     })}
@@ -75,7 +76,7 @@ const mapDispatchToProps = dispatch => ({
             products: products
         });
     },
-    createBrief: async (brief: IBrief): Promise<void> => {
+    createBrief: async (brief: BriefState): Promise<void> => {
         const newBrief = await createBrief(brief);
         dispatch({
             type: actionTypes.ADD_BRIEF,

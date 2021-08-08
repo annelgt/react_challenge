@@ -1,24 +1,28 @@
 interface IProduct {
-  id: string
-  label: string
+    id: number
+    label: string
 }
 
 interface IBrief {
-  id?: string
-  title: string
-  comment: string
-  product?: string
+    id: number
+    title: string
+    comment: string
+    product?: IProduct
 }
 
-type BriefState = {
-  briefs: IBrief[]
-  products: IProduct[]
+type BriefState = { title: string, comment: string, productId: number }
+
+
+type AppState = {
+    briefs: IBrief[]
+    products: IProduct[]
 }
 
-type BriefAction = {
-  type: string
-  brief: IBrief
-  products: IProduct[]
+type AppAction = {
+    type: string
+    brief: IBrief
+    products: IProduct[]
+    briefs: IBrief[]
 }
 
-type DispatchType = (args: BriefAction) => BriefAction
+type DispatchType = (args: AppAction) => AppAction

@@ -6,7 +6,7 @@ import {Provider} from "react-redux"
 import App from "./App"
 import reducer from "./store/reducer"
 
-const store: Store<BriefState, BriefAction> & {
+const store: Store<AppState, AppAction> & {
     dispatch: DispatchType
 } = createStore(reducer);
 
