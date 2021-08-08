@@ -27,6 +27,11 @@ const reducer = (
                 ...state,
                 products: action.products
             };
+        case actionTypes.SET_PRODUCT_FILTER:
+            return {
+                ...state,
+                productFilter: action.productFilter
+            };
     }
     return state;
 }

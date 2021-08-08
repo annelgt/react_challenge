@@ -16,6 +16,7 @@ type BriefState = { title: string, comment: string, productId: number }
 type AppState = {
     briefs: IBrief[]
     products: IProduct[]
+    productFilter?: number
 }
 
 type AppAction = {
@@ -23,6 +24,7 @@ type AppAction = {
     brief: IBrief
     products: IProduct[]
     briefs: IBrief[]
+    productFilter: number
 }
 
 type DispatchType = (args: AppAction) => AppAction
