@@ -9,10 +9,10 @@ function App() {
         <div>
             <div>
                 <Grid container>
-                    <Grid item xs={4}>
+                    <Grid item xs={12} sm={4}>
                         <BriefForm/>
                     </Grid>
-                    <Grid item xs={8}>
+                    <Grid item xs={12} sm={8}>
                         <BriefList/>
                     </Grid>
                 </Grid>
