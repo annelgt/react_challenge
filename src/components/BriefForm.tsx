@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {connect} from "react-redux";
 import * as actionTypes from "../store/actionTypes";
 import {createBrief, getProducts} from "../store/actions";
+import {Box, Button, CircularProgress, MenuItem, TextField} from "@material-ui/core";
 
 type GetProductsFunction = () => void;
 type CreateBriefFunction = (data: BriefState) => void;
@@ -10,9 +11,21 @@ type BriefFormProps = {
     getProducts: GetProductsFunction,
     createBrief: CreateBriefFunction,
     products: IProduct[]
+    addingNewBrief?: boolean
 };
 
-export class BriefForm extends Component<BriefFormProps, BriefState> {
+type BriefFormState = {
+    title: string,
+    comment: string,
+    productId: number,
+    errors?: {
+        title?: string,
+        comment?: string,
+        product?: string
+    }
+}
+
+export class BriefForm extends Component<BriefFormProps, BriefFormState> {
     constructor(props) {
         super(props);
         this.state = {title: "", comment: "", productId: 1};
@@ -32,37 +45,92 @@ export class BriefForm extends Component<BriefFormProps, BriefState> {
     }
 
     onChangeTitle(event): void {
-        this.setState({title: event.target.value});
+        this.setState({title: event.target.value, errors: undefined});
     }
 
     onChangeComment(event): void {
-        this.setState({comment: event.target.value});
+        this.setState({comment: event.target.value, errors: undefined});
     }
 
     createBrief(event): void {
         event.preventDefault();
-        this.props.createBrief(this.state);
+        if (this.state.title && this.state.comment) {
+            this.props.createBrief({
+                title: this.state.title,
+                comment: this.state.comment,
+                productId: this.state.productId,
+            });
+        } else {
+            const errors = {
+                title: "",
+                comment: "",
+                product: ""
+            };
+            if (!this.state.title) {
+                errors.title = "Ce champ est obligatoire."
+            }
+
+            if (!this.state.comment) {
+                errors.comment = "Ce champ est obligatoire."
+            }
+
+            if (!this.state.productId) {
+                errors.product = "Ce champ est obligatoire."
+            }
+
+            this.setState({errors: errors});
+        }
     }
 
     render() {
         return (
             <form>
-                <label>
-                    Titre :
-                </label>
-                <input type="text" name="title" value={this.state.title} onChange={this.onChangeTitle}/>
-
-                <label>
-                    Commentaire :
-                </label>
-                <input type="text" name="comment" value={this.state.comment} onChange={this.onChangeComment}/>
-                <select name="product" value={this.state.productId || this.props.products[0]?.id}
-                        onChange={this.onChangeProduct}>
-                    {this.props.products.map((product: IProduct, index) => {
-                        return <option key={product.id} value={product.id}>{product.label}</option>;
-                    })}
-                </select>
-                <input type="submit" onClick={this.createBrief} value="Valider"/>
+                <Box m={2}>
+                    <TextField required
+                               error={!!this.state.errors?.title}
+                               helperText={this.state.errors?.title || ""}
+                               type="text"
+                               name="title"
+                               label="Titre"
+                               value={this.state.title}
+                               onChange={this.onChangeTitle}/>
+                </Box>
+                <Box m={2}>
+                    <TextField required
+                               error={!!this.state.errors?.comment}
+                               helperText={this.state.errors?.comment || ""}
+                               type="text"
+                               name="comment"
+                               label="Commentaire"
+                               value={this.state.comment}
+                               onChange={this.onChangeComment}/>
+                </Box>
+                <Box m={2}>
+                    <TextField
+                        select
+                        required
+                        name="product" value={this.state.productId || this.props.products[0]?.id}
+                        onChange={this.onChangeProduct}
+                        helperText="Sélectionnez un produit"
+                    >
+                        {this.props.products.map((product: IProduct, index) => {
+                            return <MenuItem key={product.id} value={product.id}>{product.label}</MenuItem>;
+                        })}
+                    </TextField>
+                </Box>
+                <Box m={2} display="flex">
+                    <Box>
+                        <Button type="submit"
+                                variant="contained"
+                                color="primary"
+                                onClick={this.createBrief}>
+                            Ajouter
+                        </Button>
+                    </Box>
+                    <Box ml={2} mt={1}>
+                        {this.props.addingNewBrief ? <CircularProgress size={20}/> : ""}
+                    </Box>
+                </Box>
             </form>
         );
     }
@@ -77,6 +145,12 @@ const mapDispatchToProps = dispatch => ({
         });
     },
     createBrief: async (brief: BriefState): Promise<void> => {
+        dispatch({
+            type: actionTypes.LOADING,
+            loading: {
+                newBrief: true
+            }
+        });
         const newBrief = await createBrief(brief);
         dispatch({
             type: actionTypes.ADD_BRIEF,
@@ -87,7 +161,8 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = (state) => {
     return {
-        products: state.products
+        products: state.products,
+        addingNewBrief: state.addingNewBrief,
     };
 }
 

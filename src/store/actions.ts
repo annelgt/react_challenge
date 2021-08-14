@@ -43,7 +43,7 @@ export const createBrief = async (brief: BriefState): Promise<IBrief | null> => 
 }
 
 export const getBriefs = async (): Promise<IBrief[]> => {
-    const response = await fetch("http://localhost:3004/briefs", {method: "GET"});
+    const response = await fetch("http://localhost:3004/briefs?_sort=id&_order=desc", {method: "GET"});
 
     if (response.ok) {
         const briefs: { id: number, title: string, comment: string, productId: number }[] = await response.json();

@@ -3,6 +3,13 @@ import {connect} from "react-redux";
 import * as actionTypes from "../store/actionTypes";
 import {getBriefs, getProducts} from "../store/actions";
 import {getProductBriefs} from "../selectors";
+import {
+    Box, CircularProgress,
+    MenuItem,
+    Paper,
+    TextField,
+    Typography
+} from "@material-ui/core";
 
 type BriefListProps = {
     getBriefs: () => void
@@ -10,6 +17,7 @@ type BriefListProps = {
     briefs: IBrief[]
     products: IProduct[]
     updateProductFilter: (productId: string) => void
+    loadingBriefs?: boolean
 };
 
 type BriefListState = { productId?: number }
@@ -35,29 +43,43 @@ export class BriefList extends Component<BriefListProps, BriefListState> {
     render() {
         return (
             <div>
-                <select name="productId" value={this.state.productId || ""} onChange={this.onChangeProduct}>
-                    <option value="">-----------</option>
-                    {this.props.products.map((product: IProduct) => {
-                        return <option key={product.id} value={product.id}>{product.label}</option>;
-                    })}
-                </select>
-                <ul>
+                <div>
+                    <TextField
+                        select
+                        disabled={this.props.loadingBriefs === true}
+                        name="productId" value={this.state.productId || ""} onChange={this.onChangeProduct}
+                        helperText="Filtrer sur le produit"
+                    >
+                        <MenuItem value="">-----------</MenuItem>
+                        {this.props.products.map((product: IProduct) => {
+                            return <MenuItem key={product.id} value={product.id}>{product.label}</MenuItem>;
+                        })}
+                    </TextField>
+                </div>
+                <div style={{display: this.props.loadingBriefs ? "none" : "block"}}>
                     {this.props.briefs.map((brief: IBrief) => {
                         return (
-                            <li key={brief.id}>
-                                {brief.title}
-                                <ul>
-                                    <li>
-                                        {brief.comment}
-                                    </li>
-                                    <li>
-                                        {brief.product?.label}
-                                    </li>
-                                </ul>
-                            </li>
+                            <Box mt={2} mb={2} key={brief.id}>
+                                <Paper>
+                                    <Box p={2}>
+                                        <Typography variant="h6">{brief.title}</Typography>
+                                        <Typography variant="subtitle1" paragraph>
+                                            {brief.comment}
+                                        </Typography>
+                                        <Typography variant="caption" display="block" gutterBottom>
+                                            {brief.product ? brief.product.label : ''}
+                                        </Typography>
+                                    </Box>
+                                </Paper>
+                            </Box>
                         );
                     })}
-                </ul>
+                </div>
+                <div style={{display: this.props.loadingBriefs ? "block" : "none"}}>
+                    <Box m={2} alignItems="center" justifyContent="center" display="flex">
+                        <CircularProgress/>
+                    </Box>
+                </div>
             </div>
         );
     }
@@ -65,6 +87,12 @@ export class BriefList extends Component<BriefListProps, BriefListState> {
 
 const mapDispatchToProps = dispatch => ({
     getBriefs: async (): Promise<void> => {
+        dispatch({
+            type: actionTypes.LOADING,
+            loading: {
+                briefs: true
+            }
+        });
         const briefs = await getBriefs();
         dispatch({
             type: actionTypes.GET_BRIEFS,
@@ -89,7 +117,8 @@ const mapDispatchToProps = dispatch => ({
 const mapStateToProps = (state) => {
     return {
         briefs: getProductBriefs(state),
-        products: state.products
+        products: state.products,
+        loadingBriefs: state.loadingBriefs
     };
 }
 

@@ -17,6 +17,8 @@ type AppState = {
     briefs: IBrief[]
     products: IProduct[]
     productFilter?: number
+    addingNewBrief?: boolean
+    loadingBriefs?: boolean
 }
 
 type AppAction = {
@@ -25,6 +27,10 @@ type AppAction = {
     products: IProduct[]
     briefs: IBrief[]
     productFilter: number
+    loading?: {
+        newBrief?: boolean,
+        briefs?: boolean
+    }
 }
 
 type DispatchType = (args: AppAction) => AppAction

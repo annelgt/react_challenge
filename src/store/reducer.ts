@@ -15,12 +15,14 @@ const reducer = (
         case actionTypes.ADD_BRIEF:
             return {
                 ...state,
-                briefs: state.briefs.concat(action.brief)
+                briefs: [action.brief].concat(state.briefs),
+                addingNewBrief: false
             };
         case actionTypes.GET_BRIEFS:
             return {
                 ...state,
-                briefs: state.briefs.concat(action.briefs)
+                briefs: state.briefs.concat(action.briefs),
+                loadingBriefs: false
             };
         case actionTypes.GET_PRODUCTS:
             return {
@@ -31,6 +33,12 @@ const reducer = (
             return {
                 ...state,
                 productFilter: action.productFilter
+            };
+        case actionTypes.LOADING:
+            return {
+                ...state,
+                addingNewBrief: action.loading?.newBrief === true,
+                loadingBriefs: action.loading?.briefs === true,
             };
     }
     return state;
