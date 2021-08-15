@@ -4,13 +4,20 @@
 
 ```shell script
 git clone git@github.com:bellotanne/react_challenge.git
+cd react_challenge
+yarn install
 ```
 
-In terminal, launch this command (it starts [json-server](https://github.com/typicode/json-server) on port 3001 and react app on port 3000):
+If the last operation prints you error about cypress and "node" engine incompatibility, use `yarn install --ignore-engines`.
+
+
+## Run the app
 
 ```
 yarn start
 ```
+
+This command starts [json-server](https://github.com/typicode/json-server) on port 3001 and react app on port 3000.
 
 Then go to http://localhost:3000.
 
