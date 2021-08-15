@@ -1,4 +1,4 @@
-#React challenge
+# React challenge
 
 ## Installation
 
@@ -6,18 +6,18 @@
 git clone git@github.com:bellotanne/react_challenge.git
 ```
 
-In two terminals, launch this commands:
+In terminal, launch this command (it starts [json-server](https://github.com/typicode/json-server) on port 3001 and react app on port 3000):
 
 ```
 yarn start
 ```
 
-to start localhost server ; and 
-
-```shell script
-json-server --watch db.json --port 3004
-```
-
-to start json server (https://github.com/typicode/json-server).
-
 Then go to http://localhost:3000.
+
+## Run tests
+
+
+Launch test server (port 4000), json server (port 4001, based on independent db file `test-db.json`), and cypress app:
+```
+yarn run cy:open
+```
