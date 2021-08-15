@@ -1,0 +1,12 @@
+{
+  "fixturesFolder": false,
+  "supportFile": false,
+  "pluginsFile": false,
+  "component": {
+    "testFiles": "**/*.test.{js,ts,jsx,tsx}",
+    "componentFolder": "src"
+  },
+  "env": {
+    "REACT_APP_API_URL": "http://localhost:4001"
+  }
+}

@@ -1,5 +1,5 @@
 export const getProducts = async (filters?: { name: string, value: string }[]): Promise<IProduct[]> => {
-    let url: string = "http://localhost:3004/products";
+    let url: string = `${process.env.REACT_APP_API_URL}/products`;
 
     if (filters) {
         const params: string = (Array.from(new Set(filters.map((data) => {
@@ -19,7 +19,7 @@ export const getProducts = async (filters?: { name: string, value: string }[]): 
 
 
 export const createBrief = async (brief: BriefState): Promise<IBrief | null> => {
-    const response = await fetch("http://localhost:3004/briefs", {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/briefs`, {
         method: "POST",
         headers: {
             "Accept": "application/json",
@@ -43,7 +43,7 @@ export const createBrief = async (brief: BriefState): Promise<IBrief | null> => 
 }
 
 export const getBriefs = async (): Promise<IBrief[]> => {
-    const response = await fetch("http://localhost:3004/briefs?_sort=id&_order=desc", {method: "GET"});
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/briefs?_sort=id&_order=desc`, {method: "GET"});
 
     if (response.ok) {
         const briefs: { id: number, title: string, comment: string, productId: number }[] = await response.json();

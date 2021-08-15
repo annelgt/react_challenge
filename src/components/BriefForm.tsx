@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {connect} from "react-redux";
 import * as actionTypes from "../store/actionTypes";
 import {createBrief, getProducts} from "../store/actions";
-import {Box, Button, CircularProgress, MenuItem, TextField} from "@material-ui/core";
+import {Box, Button, CircularProgress, MenuItem, Select, TextField} from "@material-ui/core";
 
 type GetProductsFunction = () => void;
 type CreateBriefFunction = (data: BriefState) => void;
@@ -28,7 +28,7 @@ type BriefFormState = {
 export class BriefForm extends Component<BriefFormProps, BriefFormState> {
     constructor(props) {
         super(props);
-        this.state = {title: "", comment: "", productId: 1};
+        this.state = {title: "", comment: "", productId: 0};
 
         this.onChangeProduct = this.onChangeProduct.bind(this);
         this.onChangeTitle = this.onChangeTitle.bind(this);
@@ -42,6 +42,16 @@ export class BriefForm extends Component<BriefFormProps, BriefFormState> {
 
     onChangeProduct(event): void {
         this.setState({productId: event.target.value});
+
+        if (event.target.value) {
+            this.setState({
+                errors: {
+                    title: this.state.errors?.title,
+                    comment: this.state.errors?.comment,
+                    product: undefined
+                }
+            });
+        }
     }
 
     onChangeTitle(event): void {
@@ -74,7 +84,7 @@ export class BriefForm extends Component<BriefFormProps, BriefFormState> {
                 errors.comment = "Ce champ est obligatoire."
             }
 
-            if (!this.state.productId) {
+            if (!Number(this.state.productId)) {
                 errors.product = "Ce champ est obligatoire."
             }
 
@@ -105,14 +115,16 @@ export class BriefForm extends Component<BriefFormProps, BriefFormState> {
                                value={this.state.comment}
                                onChange={this.onChangeComment}/>
                 </Box>
-                <Box m={2}>
+                <Box m={2} data-container="select-product">
                     <TextField
                         select
+                        error={!!this.state.errors?.product}
                         required
-                        name="product" value={this.state.productId || this.props.products[0]?.id}
+                        name="product" value={this.state.productId}
                         onChange={this.onChangeProduct}
-                        helperText="Sélectionnez un produit"
+                        helperText={this.state.errors?.product || "Sélectionnez un produit"}
                     >
+                        <MenuItem value="0">----------</MenuItem>
                         {this.props.products.map((product: IProduct, index) => {
                             return <MenuItem key={product.id} value={product.id}>{product.label}</MenuItem>;
                         })}

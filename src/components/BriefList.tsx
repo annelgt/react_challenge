@@ -43,7 +43,8 @@ export class BriefList extends Component<BriefListProps, BriefListState> {
     render() {
         return (
             <div>
-                <div style={{display: this.props.briefs.length === 0 && !this.state.productId ? "none" : "block"}}>
+                <div data-container="briefs-list-filter-product"
+                     style={{display: this.props.briefs.length === 0 && !this.state.productId ? "none" : "block"}}>
                     <TextField
                         select
                         disabled={this.props.loadingBriefs === true}
@@ -56,7 +57,8 @@ export class BriefList extends Component<BriefListProps, BriefListState> {
                         })}
                     </TextField>
                 </div>
-                <div style={{display: this.props.briefs.length === 0 ? "block" : "none"}}>
+                <div data-container="empty-briefs-list"
+                     style={{display: this.props.briefs.length === 0 ? "block" : "none"}}>
                     <Box mt={2} mb={2}>
                         <Paper>
                             <Box p={2} textAlign="center">
@@ -65,17 +67,28 @@ export class BriefList extends Component<BriefListProps, BriefListState> {
                         </Paper>
                     </Box>
                 </div>
-                <div style={{display: this.props.loadingBriefs || this.props.briefs.length === 0 ? "none" : "block"}}>
+                <div data-container="briefs-list"
+                     style={{display: this.props.loadingBriefs || this.props.briefs.length === 0 ? "none" : "block"}}>
                     {this.props.briefs.map((brief: IBrief) => {
                         return (
-                            <Box mt={2} mb={2} key={brief.id}>
+                            <Box data-container="brief"
+                                 mt={2} mb={2} key={brief.id}>
                                 <Paper>
                                     <Box p={2}>
-                                        <Typography variant="h6">{brief.title}</Typography>
-                                        <Typography variant="subtitle1" paragraph>
+                                        <Typography data-container="brief-title"
+                                                    variant="h6">
+                                            {brief.title}
+                                        </Typography>
+                                        <Typography data-container="brief-comment"
+                                                    variant="subtitle1"
+                                                    paragraph>
                                             {brief.comment}
                                         </Typography>
-                                        <Typography variant="caption" display="block" gutterBottom>
+                                        <Typography
+                                            data-container="brief-product"
+                                            variant="caption"
+                                            display="block"
+                                            gutterBottom>
                                             {brief.product ? brief.product.label : ''}
                                         </Typography>
                                     </Box>
