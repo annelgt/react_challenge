@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {connect} from "react-redux";
 import * as actionTypes from "../store/actionTypes";
 import {createBrief, getProducts} from "../store/actions";
-import {Box, Button, CircularProgress, MenuItem, Select, TextField} from "@material-ui/core";
+import {Box, Button, CircularProgress, MenuItem, TextField} from "@material-ui/core";
 
 type GetProductsFunction = () => void;
 type CreateBriefFunction = (data: BriefState) => void;
@@ -70,6 +70,7 @@ export class BriefForm extends Component<BriefFormProps, BriefFormState> {
                 comment: this.state.comment,
                 productId: this.state.productId,
             });
+            this.setState({title: "", comment: "", productId: 0, errors: undefined});
         } else {
             const errors = {
                 title: "",
