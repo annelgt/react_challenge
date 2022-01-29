@@ -1,5 +1,7 @@
 # React challenge
 
+Small React app (my first app with this framework, to discover it): app to add and list articles.
+
 ## Installation
 
 ```shell script
